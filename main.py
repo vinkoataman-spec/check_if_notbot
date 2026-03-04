@@ -109,10 +109,13 @@ async def check_subscriptions_loop():
                         if status not in ("left", "kicked"):
                             # Вважаємо, що підписався
                             users_subscribed.add(user_id)
-                            await _notify_admin(
-                                "📢 <b>Підписався на телеграм-канал</b>\n"
-                                f"ID: {user_id}"
-                            )
+                            info = users_info.get(user_id)
+                            text = "📢 <b>Підписався на телеграм-канал</b>\n"
+                            if info:
+                                text += info
+                            else:
+                                text += f"ID: {user_id}"
+                            await _notify_admin(text)
                             pending_subscribers.discard(user_id)
                     except Exception as e:
                         logger.debug("Помилка під час перевірки підписки для %s: %s", user_id, e)
