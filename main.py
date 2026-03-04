@@ -196,6 +196,35 @@ async def cmd_help(message: types.Message):
     await message.answer("Тут буде допомога по командах.")
 
 
+@dp.message(Command("debug_sub"))
+async def cmd_debug_sub(message: types.Message):
+    """Показати, як бот бачить твій статус у каналі (для налагодження)."""
+    user = message.from_user
+    if user.id != ADMIN_ID:
+        await message.answer("Ця команда доступна тільки адміну.")
+        return
+
+    if not CHANNEL_USERNAME:
+        await message.answer("CHANNEL_USERNAME не налаштований.")
+        return
+
+    chat_id = f"@{CHANNEL_USERNAME}"
+    try:
+        member = await bot.get_chat_member(chat_id, user.id)
+        status = str(getattr(member, "status", "")).lower()
+        await message.answer(
+            "DEBUG:\n"
+            f"CHANNEL_USERNAME: {CHANNEL_USERNAME}\n"
+            f"chat_id: {chat_id}\n"
+            f"Твій status у каналі: {status}\n"
+        )
+    except Exception as e:
+        await message.answer(
+            "Помилка get_chat_member:\n"
+            f"{e}"
+        )
+
+
 async def main():
     logger.info("Бот запущено")
     # Запускаємо фонову перевірку підписок та щоденну статистику
