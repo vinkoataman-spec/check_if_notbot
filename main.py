@@ -65,7 +65,10 @@ async def cmd_start(message: types.Message):
     users_started.add(user.id)
     _remember_user(user)
 
-    await message.answer("test")
+    await message.answer(
+        "Ти точно людина?",
+        reply_markup=confirm_human_kb,
+    )
     await _notify_admin(
         "🟢 <b>Активував бота</b>\n" + _user_info(message.from_user)
     )
