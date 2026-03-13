@@ -66,7 +66,7 @@ async def cmd_start(message: types.Message):
     _remember_user(user)
 
     await message.answer(
-        "Ти точно людина?",
+        "test",
         reply_markup=confirm_human_kb,
     )
     await _notify_admin(
